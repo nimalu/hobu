@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Welcome</title>
+  <link rel="stylesheet" href=".\style.css">
+  <style>
+    * {
+      font-family: Arial, Helvetica, sans-serif;
+      box-sizing: border-box;
+      color: #000;
+      text-decoration: none;
+      transition-duration: 0.3s;
+    }
+
+    body {
+      margin-top: 10em;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    /* Float four columns side by side */
+    .column {
+      float: left;
+      width: 20.0%;
+      padding: 0 10px;
+    }
+
+    /* Remove extra left and right margins, due to padding */
+    .row {
+      margin: 0 -5px;
+      margin: 5px;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* Responsive columns */
+    @media screen and (max-width: 800px) {
+      .column {
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+      }
+    }
+
+    /* Style the counter cards */
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      text-align: center;
+      background-color: #fff;
+    }
+
+    .card:hover {
+      background-color: #f1f1f1;
+    }
+
+    .card h2 {
+      font-size: 32px;
+      margin-bottom: 1%;
+      margin-top: 5%;
+    }
+
+    h2:hover {
+      color: rgb(80, 80, 80);
+    }
+
+    .card h3 {
+      font-size: 12px;
+      margin-top: 1%;
+    }
+
+    .card p [href]:hover {
+      text-decoration: underline;
+    }
+
+    .card hr {
+      width: 80%;
+    }
+  </style>
+</head>
+
+<body style="background-image: url('{{bg}}');background-size: cover;background-attachment: fixed; ">
+  <div class="row">
+    {{#classes}}
+    <div class="column">
+      <div class="card">
+        <h2><a target="_blank" href="{{ clazz.link }}">{{ name }}</a></h2>
+        {{#clazz.smaller}}
+        <hr>
+        {{/clazz.smaller}}
+        {{#clazz.smaller}}
+        <p><a target="_blank" href="{{ link }}">{{ name }}</a></p>
+        {{/clazz.smaller}}
+      </div>
+    </div>
+    {{/classes}}
+  </div>
+</body>
+
+</html>

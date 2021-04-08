@@ -1,0 +1,30 @@
+{
+  "classes": [
+    {
+      "name": "Rechnerstrukturen",
+      "link": "http:/7dsafsadfljsdfdsaf.asdgsd.de",
+      "links": [
+        {
+          "name": "smaller",
+          "link": "another"
+        },
+        {
+          "name": "hello",
+          "link": "sadgsdfg"
+        }
+      ]
+    },
+    {
+      "name": "Grundibundi",
+      "link": "http:/7dsafsadfljsdfdsaf.asdgsd.de"
+    },
+    {
+      "name": "fgdhgfhd",
+      "link": "http:/dfghfgdhgh.asdgsd.de"
+    },
+    {
+      "name": "dfghfghd",
+      "link": "http:/dfghfgdhfgdhfgh.teu.de"
+    }
+  ]
+}
