@@ -93,13 +93,13 @@
     {{#classes}}
     <div class="column">
       <div class="card">
-        <h2><a target="_blank" href="{{ clazz.link }}">{{ name }}</a></h2>
-        {{#clazz.smaller}}
+        <h2><a target="_blank" href="{{ link }}">{{ name }}</a></h2>
+        {{#links}}
         <hr>
-        {{/clazz.smaller}}
-        {{#clazz.smaller}}
+        {{/links}}
+        {{#links}}
         <p><a target="_blank" href="{{ link }}">{{ name }}</a></p>
-        {{/clazz.smaller}}
+        {{/links}}
       </div>
     </div>
     {{/classes}}
