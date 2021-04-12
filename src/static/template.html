@@ -25,9 +25,9 @@
 
     .container {
       display: flex;
-      align-items: flex-start;
       flex-flow: row wrap;
-      align-items: center;
+      //align-items: flex-start;
+      justify-content: center;
     }
 
     /* Responsive columns */
@@ -84,9 +84,7 @@
     {{#classes}}
     <div class="card">
       <h2><a target="_blank" href="{{ link }}">{{ name }}</a></h2>
-      {{#links}}
       <hr>
-      {{/links}}
       {{#links}}
       <a target="_blank" href="{{ link }}">{{ name }}</a>
       {{/links}}
