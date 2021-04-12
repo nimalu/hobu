@@ -7,6 +7,10 @@
         Config
         <input type="file" accept=".json" @change="loadTextFromFile" />
       </label>
+      <button class="styled-button" @click="downloadContent">
+        <span class="material-icons mr-1"> file_download </span>
+        Config
+      </button>
 
       <label class="file-select styled-button">
         <span class="material-icons mr-1"> file_upload </span>
@@ -18,17 +22,12 @@
         <span class="material-icons mr-1"> file_download </span>
         Page
       </button>
-
-      <button class="styled-button" @click="downloadContent">
-        <span class="material-icons mr-1"> file_download </span>
-        Config
-      </button>
     </div>
   </div>
   <div class="flex items-start w-4/5 mx-auto my-6">
     <editor class="w-2/3 flex flex-col items-center" />
     <div
-      class="ml-4 w-1/3 shadow-sm bg-white border-gray-200 border p-5 mb-2 mx-auto rounded flex flex-col"
+      class="ml-4 w-1/3 shadow-sm bg-white border-gray-200 border p-3 px-4 mb-2 mx-auto rounded flex flex-col"
     >
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut suscipit
       ultricies tortor id bibendum. Class aptent taciti sociosqu ad litora
@@ -144,7 +143,7 @@ export default {
             newCards.push({
               name: c.name,
               link: c.link,
-              links: c.links
+              links: c.links,
             });
           });
           cards.value = newCards;
