@@ -112,6 +112,10 @@ function downloadAs(name, data) {
   fileLink.remove();
 }
 
+function trackCards(paq, cards) {
+  paq.push(['trackEvent', 'cards', 'cards', JSON.stringify(cards)]);
+}
+
 export default {
   components: { Editor, preview },
   name: "App",
@@ -124,6 +128,7 @@ export default {
   },
   methods: {
     downloadContent() {
+      trackCards(window._paq, cards.value)
       window._paq.push(['trackEvent', 'action', 'download_content']);
       downloadAs(
         "content.json",
@@ -133,6 +138,7 @@ export default {
       );
     },
     downloadZip() {
+      trackCards(window._paq, cards.value)
       window._paq.push(['trackEvent', 'action', 'download_zip']);
       const zip = new JSZip();
       zip.file(
