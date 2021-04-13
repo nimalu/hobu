@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import Textfield from "@/components/LinkTextfield";
+import Textfield from "@/LinkTextfield";
 import cards from "@/data.ts";
 
 export default {
