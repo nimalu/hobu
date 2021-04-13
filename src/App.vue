@@ -62,16 +62,31 @@
       <strong>Step 4</strong>
       <p class="mb-2">
         Download the page and save it to a location that you can remember.
-        Extract the content by right-clicking on the downloaded archive and choose <em>Extract all</em> 
+        Extract the content by right-clicking on the downloaded archive and
+        choose <em>Extract all</em>
         (option possibly named different)
       </p>
       <p>
-        Now it's time to configure your browser to use this page as a start page. In the following it'll be explained 
-        how to do it in <em>Firefox</em>. Open the extracted file <em>index.html</em> with firefox. 
-        Go to <img width="20" height="20" src="@/static/menubutton.png" class="inline"> <em>menu</em>, 
-        <img width="20" height="20"  src="@/static/settings.jpg" class="inline"> settings,
-        <img width="20" height="20"  src="@/static/home.jpg" class="inline"> home. Then, click on <em>Use Current Page</em>.
-        Voilà!
+        Now it's time to configure your browser to use this page as a start
+        page. In the following it'll be explained how to do it in
+        <em>Firefox</em>. Open the extracted file <em>index.html</em> with
+        firefox. Go to
+        <img
+          width="20"
+          height="20"
+          src="@/static/menubutton.png"
+          class="inline"
+        />
+        <em>menu</em>,
+        <img
+          width="20"
+          height="20"
+          src="@/static/settings.jpg"
+          class="inline"
+        />
+        settings,
+        <img width="20" height="20" src="@/static/home.jpg" class="inline" />
+        home. Then, click on <em>Use Current Page</em>. Voilà!
       </p>
     </div>
   </div>
@@ -109,6 +124,7 @@ export default {
   },
   methods: {
     downloadContent() {
+      window._paq.push(['trackEvent', 'action', 'download_content']);
       downloadAs(
         "content.json",
         new Blob([JSON.stringify({ classes: cards.value }, null, 2)], {
@@ -117,6 +133,7 @@ export default {
       );
     },
     downloadZip() {
+      window._paq.push(['trackEvent', 'action', 'download_zip']);
       const zip = new JSZip();
       zip.file(
         "index.html",
@@ -144,6 +161,7 @@ export default {
       });
     },
     loadBackground(ev) {
+      window._paq.push(['trackEvent', 'action', 'upload_background']);
       this.background = ev.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -152,6 +170,7 @@ export default {
       reader.readAsDataURL(ev.target.files[0]);
     },
     loadTextFromFile(ev) {
+      window._paq.push(['trackEvent', 'action', 'upload_config']);
       const file = ev.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -173,6 +192,9 @@ export default {
       };
       reader.readAsText(file);
     },
+  },
+  mounted() {
+    window._paq.push(['trackPageView'])
   },
 };
 </script>
