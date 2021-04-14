@@ -1,8 +1,10 @@
 <template>
-  <div class="flex justify-between items-center w-4/5 mx-auto mt-12">
+  <div
+    class="flex flex-col md:flex-row justify-between items-center w-11/12 md:w-4/5 mx-auto mt-12"
+  >
     <div>
       <h1 class="heading">HoBu</h1>
-      <h3 class="subheading">Homepage Builder</h3>
+      <h3 class="subheading invisible md:visible">Homepage Builder</h3>
     </div>
     <div class="flex flex-wrap">
       <label class="file-select styled-button">
@@ -28,10 +30,16 @@
       </button>
     </div>
   </div>
-  <div class="flex items-start w-4/5 mx-auto my-2">
-    <editor class="w-7/12 flex flex-col items-center" />
+  <div
+    class="flex flex-col-reverse md:flex-row items-start w-11/12 md:w-4/5 mx-auto md:my-2"
+  >
+    <editor class="w-full md:w-7/12 mb-2 md:mb-0 flex flex-col items-center" />
+    <div class="my-2 w-full md:hidden">
+      <preview :classes="cards" :background="backgroundLoaded" />
+      <p class="text-gray-500">Preview</p>
+    </div>
     <div
-      class="ml-2 w-5/12 shadow-sm bg-white border-gray-200 border p-3 px-4 mb-2 mx-auto rounded flex flex-col"
+      class="md:ml-2 w-full md:w-5/12 shadow-sm bg-white border-gray-200 border p-3 px-4 mb-2 mx-auto rounded hidden md:flex flex-col"
     >
       <strong>Step 1</strong>
       <p class="mb-2">
@@ -113,7 +121,7 @@ function downloadAs(name, data) {
 }
 
 function trackCards(paq, cards) {
-  paq.push(['trackEvent', 'cards', 'cards', JSON.stringify(cards)]);
+  paq.push(["trackEvent", "cards", "cards", JSON.stringify(cards)]);
 }
 
 export default {
@@ -128,8 +136,8 @@ export default {
   },
   methods: {
     downloadContent() {
-      trackCards(window._paq, cards.value)
-      window._paq.push(['trackEvent', 'action', 'download_content']);
+      trackCards(window._paq, cards.value);
+      window._paq.push(["trackEvent", "action", "download_content"]);
       downloadAs(
         "content.json",
         new Blob([JSON.stringify({ classes: cards.value }, null, 2)], {
@@ -138,8 +146,8 @@ export default {
       );
     },
     downloadZip() {
-      trackCards(window._paq, cards.value)
-      window._paq.push(['trackEvent', 'action', 'download_zip']);
+      trackCards(window._paq, cards.value);
+      window._paq.push(["trackEvent", "action", "download_zip"]);
       const zip = new JSZip();
       zip.file(
         "index.html",
@@ -167,7 +175,7 @@ export default {
       });
     },
     loadBackground(ev) {
-      window._paq.push(['trackEvent', 'action', 'upload_background']);
+      window._paq.push(["trackEvent", "action", "upload_background"]);
       this.background = ev.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -176,7 +184,7 @@ export default {
       reader.readAsDataURL(ev.target.files[0]);
     },
     loadTextFromFile(ev) {
-      window._paq.push(['trackEvent', 'action', 'upload_config']);
+      window._paq.push(["trackEvent", "action", "upload_config"]);
       const file = ev.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -200,7 +208,7 @@ export default {
     },
   },
   mounted() {
-    window._paq.push(['trackPageView'])
+    setTimeout(() => window._paq.push(["trackPageView"]), 2000);
   },
 };
 </script>

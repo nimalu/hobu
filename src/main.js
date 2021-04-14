@@ -8,7 +8,7 @@ const app = createApp(App)
 
 app.use(VueMatomo, {
   // Configure your matomo server and site by providing
-  host: 'http://193.196.39.83:1234/',
+  host: 'http://193.196.37.253:1234',
   siteId: 1,
 
   // Changes the default .js and .php endpoint's filename
