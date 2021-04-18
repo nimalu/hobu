@@ -159,15 +159,9 @@ export default {
       zip.file(this.background?.name || "bg.jpg", this.background || "bg.jpg");
       zip.file(
         "content.json",
-        encodeURIComponent(
-          JSON.stringify(
-            {
-              classes: cards.value,
-            },
-            null,
-            2
-          )
-        )
+        new Blob([JSON.stringify({ classes: cards.value }, null, 2)], {
+          type: "application/json",
+        })
       );
 
       zip.generateAsync({ type: "blob" }).then(function (content) {
