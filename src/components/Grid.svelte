@@ -1,16 +1,22 @@
 <script>
-    export let data;
     import { onMount } from "svelte";
-    export let gridWidth = 10,
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
+
+    export let data,
+        gridWidth = 10,
         gridHeight = 20;
 
-    let gridContainer;
+    let gridContainer,
+        movingElement = {
+            active: false,
+        },
+        widths,
+        heights,
+        columnGap,
+        rowGap;
 
-    let movingElement = {
-        active: false,
-    };
-    let widths, heights, columnGap, rowGap;
-    onMount(() => {
+    function getDimensions() {
         widths = getComputedStyle(gridContainer)
             ["grid-template-columns"].split("px")
             .map(parseFloat);
@@ -21,7 +27,9 @@
             getComputedStyle(gridContainer)["column-gap"].split("px")[0] | 0;
         rowGap =
             getComputedStyle(gridContainer)["column-gap"].split("px")[0] | 0;
-    });
+    }
+
+    onMount(getDimensions);
 
     function getGridCoordinates(x, y) {
         let sum = 0;
@@ -48,7 +56,7 @@
     }
 
     function onCardClicked(event) {
-        if (event.button != 0) return
+        if (event.button != 0) return;
         const index = parseInt(event.target.id.split("-")[1]);
         const rect = event.target.getBoundingClientRect();
         const gridCoordinates = { x: data[index].x, y: data[index].y };
@@ -110,14 +118,13 @@
         }
         movingElement = movingElement;
     }
-	import { createEventDispatcher } from 'svelte';
 
-	const dispatch = createEventDispatcher();
     function onCardRightClick(e, card) {
-        dispatch('onrightclick', {pos: { x: e.clientX, y: e.clientY }, card})
+        dispatch("onrightclick", { pos: { x: e.clientX, y: e.clientY }, card });
     }
+    
     function onContainerRightClick(e) {
-        dispatch('onrightclick', {pos: { x: e.clientX, y: e.clientY }})
+        dispatch("onrightclick", { pos: { x: e.clientX, y: e.clientY } });
     }
 </script>
 
@@ -135,7 +142,7 @@
 >
     {#if movingElement.active}
         <div
-        class="moving-2"
+            class="moving-2"
             style="grid-column: {movingElement.x +
                 1} / span {movingElement.width}; grid-row: {movingElement.y +
                 1} / span {movingElement.height};"
@@ -156,7 +163,8 @@
                     1} / span {current.width}; grid-row: {current.y +
                     1} / span {current.height};"
                 on:mousedown|self={onCardClicked}
-                on:contextmenu|preventDefault={(e) => onCardRightClick(e, current)}
+                on:contextmenu|preventDefault={(e) =>
+                    onCardRightClick(e, current)}
                 id="card-{i}"
             >
                 <slot {current} />

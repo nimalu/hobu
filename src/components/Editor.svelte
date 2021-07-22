@@ -1,44 +1,92 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
+    export let card;
 
-	const dispatch = createEventDispatcher();
-    let shown = false;
-    let editor;
-    export function show() {
-        shown = true;
+    function removeLink(link) {
+        card.links.splice(card.links.indexOf(link), 1);
+        dispatch("onedit");
     }
-    export function hide() {
-        shown = false;
+    function addLink() {
+        card.links.push({});
+        dispatch("onedit");
     }
 </script>
 
-{#if shown}
-    <div class="wrapper">
-        <div class="editor" bind:this={editor}>
-            <button class="close" on:click={hide}>
-                &times
-            </button>
-            <slot/>
-        </div>
+<form action="javascript:void(0);" on:change={() => dispatch("onedit")}>
+    <div>
+        <label for="width">Width</label>
+        <input name="width" type="number" bind:value={card.width} />
+        <label for="height">Height</label>
+        <input name="height" type="number" bind:value={card.height} />
     </div>
-{/if}
+    <div>
+        <input
+            class="grow-1"
+            placeholder="Section Name"
+            bind:value={card.title.name}
+        />
+        <input class="grow-3" placeholder="Link" bind:value={card.title.link} />
+    </div>
+    {#each card.links as link}
+        <div>
+            <button class="editor-button" on:click={() => removeLink(link)}>
+                &minus
+            </button>
+            <input class="grow-1" placeholder="Name" bind:value={link.name} />
+            <input class="grow-3" placeholder="Link" bind:value={link.link} />
+        </div>
+    {/each}
+
+    <button class="editor-button" on:click={addLink}>&plus</button>
+</form>
 
 <style>
-    .wrapper {
-        background-color: rgba(0, 0, 0, 0.6);
-        position:fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
+    form {
+        display: flex;
+        flex-direction: column;
     }
-    .editor {
-        background-color: whitesmoke;
-        max-width: 60vw;
-        padding: 1rem;
-        margin: 15% auto;
+
+    .grow-1 {
+        flex-grow: 1;
     }
-    .close {
-        float:right;
+
+    .grow-3 {
+        flex-grow: 3;
+    }
+
+    form div {
+        display: flex;
+    }
+
+    label {
+        padding: 10px;
+    }
+
+    input {
+        padding: 10px;
+        border: 0;
+        border-bottom: 1px solid #eee;
+        margin: 5px;
+    }
+
+    input[type="number"] {
+        margin-right: 2rem;
+        width: 3rem;
+    }
+
+    .editor-button {
+        background-color: rgb(238, 238, 238);
+        font-weight: bold;
+        border: 0;
+        margin: 5px;
+        width: 1rem;
+        height: 1rem;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .editor-button:hover {
+        background-color: rgb(200, 200, 200);
     }
 </style>

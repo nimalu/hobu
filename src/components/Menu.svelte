@@ -1,7 +1,6 @@
 <script>
-	let pos = { x: 0, y: 0 };
-	let menu;
-	let visible = false;
+	import { fade } from "svelte/transition";
+	let pos = { x: 0, y: 0 }, visible = false, menu;
 
 	export function show(position) {
 		pos = position;
@@ -12,8 +11,6 @@
 		visible = false;
 	}
 
-	import { fade } from "svelte/transition";
-
 	function onPageClick(e) {
 		if (!menu || e.target === menu || menu.contains(e.target)) return;
 		hide();
@@ -21,6 +18,7 @@
 </script>
 
 <svelte:body on:click={onPageClick} />
+
 {#if visible}
 	<div
 		class="menu"
