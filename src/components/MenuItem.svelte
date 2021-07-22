@@ -7,7 +7,7 @@
 
 <style>
     .item {
-        padding: 4px 15px;
+        padding: 4px 8px;
         cursor: default;
         font-size: 14px;
         display: flex;

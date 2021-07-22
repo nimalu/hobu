@@ -80,6 +80,7 @@
   <MenuItem on:onaction={deleteCard}>Delete</MenuItem>
   <MenuDivider />
   <MenuItem on:onaction={addCard}>New Card</MenuItem>
+  <MenuItem on:onaction={download}>Download</MenuItem>
 </Menu>
 
 <Menu bind:this={outsideMenu}>
