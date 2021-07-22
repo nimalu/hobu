@@ -20,4 +20,4 @@ Create a custom start page for your browser.
 - Move cards via dragging
 - New Cards via right-click
 - Edit/Delete cards via right-click
-- Save the file via right-click > download and overwrite the existing html file
+- **IMPORTANT**: To keep changes you made you have to download the file via right-click > download and overwrite the existing html file
