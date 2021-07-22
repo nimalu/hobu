@@ -110,6 +110,15 @@
         }
         movingElement = movingElement;
     }
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+    function onCardRightClick(e, card) {
+        dispatch('onrightclick', {pos: { x: e.clientX, y: e.clientY }, card})
+    }
+    function onContainerRightClick(e) {
+        dispatch('onrightclick', {pos: { x: e.clientX, y: e.clientY }})
+    }
 </script>
 
 <div
@@ -122,19 +131,21 @@
     bind:this={gridContainer}
     on:mouseup={onCardDrop}
     on:mousemove={onCardDrag}
+    on:contextmenu|preventDefault|self={onContainerRightClick}
 >
     {#if movingElement.active}
         <div
+        class="moving-2"
             style="grid-column: {movingElement.x +
                 1} / span {movingElement.width}; grid-row: {movingElement.y +
-                1} / span {movingElement.height};background-color: #f2f2ee;"
+                1} / span {movingElement.height};"
         />
     {/if}
     {#each data as current, i}
         {#if movingElement.active && movingElement.index == i}
             <div
                 class="card"
-                style="opacity: 0.5; position: absolute; cursor: grab; left: {movingElement.absX}px; top: {movingElement.absY}px; width: {movingElement.absWidth}px; height: {movingElement.absHeight}px"
+                style="position: absolute; cursor: grab; left: {movingElement.absX}px; top: {movingElement.absY}px; width: {movingElement.absWidth}px; height: {movingElement.absHeight}px"
             >
                 <slot {current} />
             </div>
@@ -145,6 +156,7 @@
                     1} / span {current.width}; grid-row: {current.y +
                     1} / span {current.height};"
                 on:mousedown|self={onCardClicked}
+                on:contextmenu|preventDefault={(e) => onCardRightClick(e, current)}
                 id="card-{i}"
             >
                 <slot {current} />
@@ -165,9 +177,16 @@
         padding: 5px;
         overflow: hidden;
         cursor: move;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.055);
     }
 
     .card :global(div) {
         cursor: default;
+    }
+    .moving-2 {
+        background-color: rgba(0, 0, 0, 0);
+        border-radius: 4px;
+        box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px;
     }
 </style>
