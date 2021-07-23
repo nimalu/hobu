@@ -12,5 +12,8 @@
     "svelte": "^3.37.0",
     "vite": "^2.4.3",
     "vite-plugin-singlefile": "^0.5.1"
+  },
+  "dependencies": {
+    "svelte-color-picker": "^1.0.7"
   }
 }

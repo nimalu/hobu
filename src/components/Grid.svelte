@@ -128,6 +128,8 @@
     }
 </script>
 
+<svelte:window on:resize={getDimensions} />
+
 <div
     class="canvas-container"
     style="

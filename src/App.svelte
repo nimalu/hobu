@@ -6,21 +6,26 @@
   import MenuItem from "./components/MenuItem.svelte";
   import MenuDivider from "./components/MenuDivider.svelte";
   import Editor from "./components/Editor.svelte";
+  import { HsvPicker } from "svelte-color-picker";
 
   let modal,
     cardMenu,
     outsideMenu,
     cards = [],
-    editingIndex = 0;
+    coloModal,
+    editingIndex = 0,
+    color = { r: 255, g: 255, b: 255, a: 1.0 };
 
-  function readCards() {
-    const store = document.getElementById("hidden-store");
-    if (store) {
-      cards = JSON.parse(store.innerHTML);
+  function readConfig() {
+    const storeElement = document.getElementById("hidden-store");
+    if (storeElement) {
+      const store = JSON.parse(storeElement.innerHTML);
+      cards = store.cards;
+      color = store.color;
     }
   }
 
-  onMount(readCards);
+  onMount(readConfig);
 
   function onRightClick(e) {
     if (e.detail.card) {
@@ -65,15 +70,28 @@
 
   function download() {
     let source = document.getElementsByTagName("html")[0].outerHTML;
+    const replacement = JSON.stringify({ cards, color });
     source = source.replace(
-      new RegExp('<div id="hidden-store">([^><]{30,})</div>'),
-      `<div id="hidden-store">${JSON.stringify(cards)}</div>`
+      new RegExp('<div id="hidden-store">([^><]{30,})</div>', "s"),
+      `<div id="hidden-store">${replacement}</div>`
     );
     source = source.substring(0, source.lastIndexOf('<div id="app">'));
     source += '<div id="app"></div></body></html>';
     downloadFile(source, "index.html");
   }
+
+  function changeColor() {
+    coloModal.show();
+  }
+
+  function colorCallback(rgba) {
+    color = rgba.detail;
+  }
+
+  let cssColor;
+  $: cssColor = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
 </script>
+
 
 <Menu bind:this={cardMenu}>
   <MenuItem on:onaction={modal.show}>Edit</MenuItem>
@@ -84,6 +102,7 @@
 </Menu>
 
 <Menu bind:this={outsideMenu}>
+  <MenuItem on:onaction={changeColor}>Change Color</MenuItem>
   <MenuItem on:onaction={addCard}>New Card</MenuItem>
   <MenuItem on:onaction={download}>Download</MenuItem>
 </Menu>
@@ -92,8 +111,12 @@
   <Editor card={cards[editingIndex]} on:onedit={() => (cards = cards)} />
 </Modal>
 
+<Modal bind:this={coloModal}>
+  <HsvPicker on:colorChange={colorCallback} />
+</Modal>
+
 <Grid let:current data={cards} on:onrightclick={onRightClick}>
-  <div class="card">
+  <div class="card" style={`--custom-color: ${cssColor};`}>
     <a target="_blank" href={current.title.link}>
       <h2>{current.title.name}</h2>
     </a>
@@ -130,7 +153,8 @@
   }
 
   a:hover {
-    color: rgb(70, 70, 70);
+    color: var(--custom-color);
+    filter: brightness(95%);
   }
 
   :global(#app) {
@@ -146,14 +170,14 @@
   }
 
   .card {
-    color: rgb(0, 0, 0);
+    color: var(--custom-color);
     padding: 0.5rem;
   }
 
   hr {
     margin: 0.3rem 1rem;
     border: 0;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--custom-color);
   }
 
   ul {
