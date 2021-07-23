@@ -97,6 +97,7 @@
   <MenuItem on:onaction={modal.show}>Edit</MenuItem>
   <MenuItem on:onaction={deleteCard}>Delete</MenuItem>
   <MenuDivider />
+  <MenuItem on:onaction={changeColor}>Change Color</MenuItem>
   <MenuItem on:onaction={addCard}>New Card</MenuItem>
   <MenuItem on:onaction={download}>Download</MenuItem>
 </Menu>
