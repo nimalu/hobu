@@ -16,12 +16,16 @@
     editingIndex = 0,
     color = { r: 255, g: 255, b: 255, a: 1.0 };
 
+  function setConfig(storeString) {
+    const store = JSON.parse(storeString);
+    cards = store.cards;
+    color = store.color;
+  }
+
   function readConfig() {
     const storeElement = document.getElementById("hidden-store");
     if (storeElement) {
-      const store = JSON.parse(storeElement.innerHTML);
-      cards = store.cards;
-      color = store.color;
+      setConfig(storeElement.innerHTML);
     }
   }
 
@@ -30,9 +34,11 @@
   function onRightClick(e) {
     if (e.detail.card) {
       cardMenu.show(e.detail.pos);
+      outsideMenu.hide()
       editingIndex = cards.indexOf(e.detail.card);
     } else {
       outsideMenu.show(e.detail.pos);
+      cardMenu.hide()
     }
   }
 
@@ -68,15 +74,20 @@
     document.body.removeChild(element);
   }
 
-  function download() {
-    let source = document.getElementsByTagName("html")[0].outerHTML;
+  function reset(content) {
     const replacement = JSON.stringify({ cards, color });
-    source = source.replace(
+    content = content.replace(
       new RegExp('<div id="hidden-store">([^><]{30,})</div>', "s"),
       `<div id="hidden-store">${replacement}</div>`
     );
-    source = source.substring(0, source.lastIndexOf('<div id="app">'));
-    source += '<div id="app"></div></body></html>';
+    content = content.substring(0, content.lastIndexOf('<div id="hidden-store">'));
+    content += '<div id="app"></div></body></html>';
+    return content;
+  }
+
+  function download() {
+    let source = document.getElementsByTagName("html")[0].outerHTML;
+    source = reset(source);
     downloadFile(source, "index.html");
   }
 
@@ -88,24 +99,57 @@
     color = rgba.detail;
   }
 
+  function loadFile(callback) {
+    var input = document.createElement("input");
+    input.type = "file";
+    input.onchange = (e) => {
+      var reader = new FileReader();
+      reader.readAsText(e.target.files[0], "UTF-8");
+      reader.onload = (readerEvent) => callback(readerEvent.target.result);
+    };
+    input.click();
+  }
+
+  function loadUpdated() {
+    function resetHtml(html) {
+      document.open();
+      document.write(html);
+      document.close();
+    }
+    loadFile((content) => resetHtml(reset(content)));
+  }
+
+  function loadOld() {
+    loadFile((content) => {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(content, "text/html");
+      setConfig(doc.getElementById("hidden-store").innerHTML)
+    });
+  }
+
   let cssColor;
   $: cssColor = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
 </script>
-
 
 <Menu bind:this={cardMenu}>
   <MenuItem on:onaction={modal.show}>Edit</MenuItem>
   <MenuItem on:onaction={deleteCard}>Delete</MenuItem>
   <MenuDivider />
-  <MenuItem on:onaction={changeColor}>Change Color</MenuItem>
   <MenuItem on:onaction={addCard}>New Card</MenuItem>
+  <MenuItem on:onaction={changeColor}>Change Color</MenuItem>
   <MenuItem on:onaction={download}>Download</MenuItem>
+  <MenuDivider />
+  <MenuItem on:onaction={loadUpdated}>Load update</MenuItem>
+  <MenuItem on:onaction={loadOld}>Load cards</MenuItem>
 </Menu>
 
 <Menu bind:this={outsideMenu}>
-  <MenuItem on:onaction={changeColor}>Change Color</MenuItem>
   <MenuItem on:onaction={addCard}>New Card</MenuItem>
+  <MenuItem on:onaction={changeColor}>Change Color</MenuItem>
   <MenuItem on:onaction={download}>Download</MenuItem>
+  <MenuDivider />
+  <MenuItem on:onaction={loadUpdated}>Load update</MenuItem>
+  <MenuItem on:onaction={loadOld}>Load cards</MenuItem>
 </Menu>
 
 <Modal bind:this={modal}>
@@ -141,10 +185,6 @@
   :global(body),
   :global(html) {
     height: 99%;
-  }
-
-  :global(#hidden-store) {
-    display: none;
   }
 
   a {
