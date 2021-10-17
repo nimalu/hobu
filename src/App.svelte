@@ -7,6 +7,7 @@
   import MenuDivider from "./components/MenuDivider.svelte";
   import Editor from "./components/Editor.svelte";
   import { HsvPicker } from "svelte-color-picker";
+  import he from "he";
 
   let modal,
     cardMenu,
@@ -17,7 +18,7 @@
     color = { r: 255, g: 255, b: 255, a: 1.0 };
 
   function setConfig(storeString) {
-    const store = JSON.parse(storeString);
+    const store = JSON.parse(he.decode(storeString));
     cards = store.cards;
     color = store.color;
   }
