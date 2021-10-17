@@ -34,11 +34,11 @@
   function onRightClick(e) {
     if (e.detail.card) {
       cardMenu.show(e.detail.pos);
-      outsideMenu.hide()
+      outsideMenu.hide();
       editingIndex = cards.indexOf(e.detail.card);
     } else {
       outsideMenu.show(e.detail.pos);
-      cardMenu.hide()
+      cardMenu.hide();
     }
   }
 
@@ -74,21 +74,19 @@
     document.body.removeChild(element);
   }
 
-  function reset(content) {
-    const replacement = JSON.stringify({ cards, color });
-    content = content.replace(
-      new RegExp('<div id="hidden-store">([^><]{30,})</div>', "s"),
-      `<div id="hidden-store">${replacement}</div>`
-    );
-    content = content.substring(0, content.lastIndexOf('<div id="hidden-store">'));
-    content += '<div id="app"></div></body></html>';
-    return content;
+  function download() {
+    let source = getCleanedDoc(document).getElementsByTagName("html")[0].outerHTML;
+    downloadFile(source, "index.html");
   }
 
-  function download() {
-    let source = document.getElementsByTagName("html")[0].outerHTML;
-    source = reset(source);
-    downloadFile(source, "index.html");
+  function getCleanedDoc(doc) {
+    doc.getElementById("hidden-store").innerHTML = JSON.stringify({
+      cards,
+      color,
+    });
+    let clonedDoc = doc.cloneNode(true);
+    clonedDoc.getElementById("app").innerHTML = "";
+    return clonedDoc;
   }
 
   function changeColor() {
@@ -111,19 +109,22 @@
   }
 
   function loadUpdated() {
-    function resetHtml(html) {
+    loadFile((content) => {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(content, "text/html");
+      let source = getCleanedDoc(doc).getElementsByTagName("html")[0].outerHTML;
+
       document.open();
-      document.write(html);
+      document.write(source);
       document.close();
-    }
-    loadFile((content) => resetHtml(reset(content)));
+    });
   }
 
   function loadOld() {
     loadFile((content) => {
       var parser = new DOMParser();
       var doc = parser.parseFromString(content, "text/html");
-      setConfig(doc.getElementById("hidden-store").innerHTML)
+      setConfig(doc.getElementById("hidden-store").innerHTML);
     });
   }
 
